@@ -26,8 +26,19 @@ it's HolyC, a nonstandard C/C++ dialect, and asm.
 azTempleOS is a rewrited OS from the original TempleOS made by Terry Davis.
 It support azerty keyboard mapping but with some changes.
 
-You can find an .ISO in the **azTempleOS_ISO** directory if you want try it.
-You can find directly in TempleOS "keywords mapping" in **/Home/azTempleOS.HC.Z**.
+You can find an .ISO in the **::/azTempleOS** directory if you want try it.
+Keyboard mapping is in **::/azTempleOS/Keyboard/Layouts/**.
+
+In mapping, each character code (or scancode if it's the first code on the line) will be behind a ;
+If a ; follow an another ; the value it's considered to 0.
+The "." is the same caracter like the second code of the current line.
+Exemple :
+    0x10; 50; .; ; .;   =    0x10; 50; 50; 0; 50;
+    
+0x10 is the scancode. After the first ;, all code is a caracter (in decimal or hexadecimal)
+You can make comment with "/"
+
+ALT combo is make on "~/HomeKeyPlugins". You can set ALT combo in this file.
 
 This project is, like the original TempleOS repo, 100% open source.
 
