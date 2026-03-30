@@ -1,6 +1,6 @@
 // Format : scancode; normal; shift; alt; control;
 
-// --- 1st line (a z e r t y u i o p) ---
+// --- 1st line (a z e r t y u i o p) ---
 0x10; 97;  65; .;  1;  // a
 0x11; 122; 90; .; 26;  // z
 0x12; 101; 69; .;  5;  // e
@@ -54,7 +54,7 @@
 0x0C;  41; 248;  93;  // ) ø ]
 0x0D;  61;  43; 125;  // = + }
 
-// --- Right symbols after "p" ---
+// --- Right symbols after "p" ---
 0x1A;  94;   .;       // ^ ^
 0x1B;  36; 156;       // $$ œ
 

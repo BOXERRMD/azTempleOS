@@ -40,6 +40,10 @@ You can make comment with "/"
 
 ALT combo is make on "~/HomeKeyPlugins". You can set ALT combo in this file.
 
+You can also make your personal font and load it when your systemt starting up.
+
+All documentation is in the system. Look "Font" and "Keymap" in /Doc directory.
+
 This project is, like the original TempleOS repo, 100% open source.
 
 Changes made by BOXERRMD.
