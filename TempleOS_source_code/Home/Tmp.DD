@@ -1,0 +1,31 @@
+$WW+H,1$$FG,5$$TX+CX,"TempleOS V5.03",D="DD_OS_NAME_VERSION"$$FG$
+
+$TX+CX,"Public Domain Operating System"$
+
+$LK,"Help & Index",A="FI:::/Doc/HelpIndex.DD"$, $LK,"Quick Start: Cmd line",A="FI:::/Doc/CmdLineOverview.DD"$
+
+$MA,"Directory",LM="PopUpCd;Dir;\n"$ of C:/Home
+DATE_ TIME_ SIZE
+03/29 23:39 0000 $MA,".",LM="Cd(\"C:/Home/.\");Dir;\n"$
+03/29 23:39 0000 $MA,"..",LM="Cd(\"C:/Home/..\");Dir;\n"$
+04/02 23:48 0000 $MA,"Psalmody",LM="Cd(\"C:/Home/Psalmody\");Dir;\n"$
+03/29 23:39 0000 $MA,"Span",LM="Cd(\"C:/Home/Span\");Dir;\n"$
+03/29 20:42 0821 $LK,"Tmp.DD.Z",A="FI:C:/Home/Tmp.DD.Z"$
+03/28 17:00 0437 $LK,"DoDistro.HC.Z",A="FI:C:/Home/DoDistro.HC.Z"$
+03/30 21:43 0793 $LK,"HomeKeyPlugIns.HC.Z",A="FI:C:/Home/HomeKeyPlugIns.HC.Z"$
+03/30 22:21 013E $LK,"MakeHome.HC.Z",A="FI:C:/Home/MakeHome.HC.Z"$
+04/13 19:29 02CF $LK,"Registry.HC.Z",A="FI:C:/Home/Registry.HC.Z"$
+C:/Home>$PT$Dir;
+$PT$$FG$$BG$$MA,"Directory",LM="PopUpCd;Dir;\n"$ of C:/Home
+DATE_ TIME_ SIZE
+03/29 23:39 0000 $MA,".",LM="Cd(\"C:/Home/.\");Dir;\n"$
+03/29 23:39 0000 $MA,"..",LM="Cd(\"C:/Home/..\");Dir;\n"$
+04/02 23:48 0000 $MA,"Psalmody",LM="Cd(\"C:/Home/Psalmody\");Dir;\n"$
+03/29 23:39 0000 $MA,"Span",LM="Cd(\"C:/Home/Span\");Dir;\n"$
+04/13 20:42 0266 $LK,"Tmp.DD.Z",A="FI:C:/Home/Tmp.DD.Z"$
+03/28 17:00 0437 $LK,"DoDistro.HC.Z",A="FI:C:/Home/DoDistro.HC.Z"$
+03/30 21:43 0793 $LK,"HomeKeyPlugIns.HC.Z",A="FI:C:/Home/HomeKeyPlugIns.HC.Z"$
+03/30 22:21 013E $LK,"MakeHome.HC.Z",A="FI:C:/Home/MakeHome.HC.Z"$
+04/13 20:36 02CF $LK,"Registry.HC.Z",A="FI:C:/Home/Registry.HC.Z"$
+0.001197s ans=0x00000009=9
+C:/Home>$PT$

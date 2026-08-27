@@ -1,0 +1,14 @@
+
+You can your own map caracter font desine with the $LK,"makeFont",A="MN:makeFont"$ function with 
+no argument.
+This function make a $FG,2$font file$FG$ to load it dynamically by $LK,"loadCustomFont",A="MN:loadCustomFont"$
+with the font filename in argument.
+
+If you want load it permanently, you can put the function $FG,4$loadCustomFont$FG$ in
+the $LK,"StartOS.HC.Z",A="::/StartOS.HC.Z"$.
+
+You can also use the $LK,"loadKBD",A="MN:loadKBD"$ function if you load a custom keyboard
+mapping too.
+$FG,5$loadKBD("Fench.KBD", "myCustomFontFilename");$FG$
+This line of code is also presente in $LK,"StartOS",A="::/StartOS.HC.Z"$ file without the name of a custom
+font file. Modify it if you want permanently custom keyboard and font.

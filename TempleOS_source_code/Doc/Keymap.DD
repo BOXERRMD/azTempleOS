@@ -1,0 +1,46 @@
+
+Keymap can be loaded dynamically by $LK,"loadKBD",A="MN:loadKBD"$ function.
+This function take the name of a $FG,2$.KBD$FG$ file (like $LK,"French.KBD",A="::/azTempleOS/Keyboard/Layouts/French.KBD"$) and load it
+in memory.
+
+$FG,2$French.KBD$FG$ was loaded by default in $LK,"StartOS",A="::/StartOS.HC.Z"$ file by Adam task.
+If you want change it, you can replace the filename with another keymap file.
+If you want disabled it, you can comment or delete the function call in
+$LK,"StartOS",A="::/StartOS.HC.Z"$ file : $FG,5$loadKBD("French.KBD", NULL);$FG$ and reboot your system.
+
+To disbale temporary the keymap, you can call the $LK,"freeCustomKbd",A="MN:freeCustomKbd"$ function.
+
+$FG,4$-------------------------------$FG$
+
+To make a keymap file, you $FG,4$$BK,1$MUST$BK,0$$FG$ follow instructions below :
+
+Each line is a definition of caracters for one scancode.
+All codes can be in hexadecimal or just in decimal.
+
+$HL,1$
+$FG,1$
+0x10; 97;  65; .;  1;  // a
+$FG$
+$HL,0$
+The first column it's for the scancode. $FG,1$0x10$FG$ was the scancode to the first
+alphabetic key $FG,8$("a" to an azerty keyboard and "q" to an qwerty keyboard)$FG$
+
+The second column is for "normal" key $FG,8$(without combo key)$FG$. It takes a position
+code in the ASCII table. $FG,1$97$FG$ is the $FG,2$"a"$FG$ code.
+
+The third column is for $FG,6$SHIFT$FG$ combo key. Like the second column, It takes a position
+code in the ASCII table. $FG,1$65$FG$ is the $FG,2$"A"$FG$ code.
+
+The fourth column is for $FG,6$ALT$FG$ combo key.
+The $FG,1$.$FG$ is a link to the second column value. Actualy, the value of the second
+column is $FG,1$97$FG$. So, the dot ($FG,1$.$FG$) take the 97 value. 
+A dot can be used only from third column to the fifth column $FG,8$(because it's take
+a value from the second column)$FG$.
+$FG,6$ALT$FG$ combo is not supported natively by the kernel. You can make your own
+ALT key combo in $LK,"HomeKeyPlugIns",A="::/HomeKeyPlugIns.HC.Z"$ and find function control to your keymap.
+
+The fifth column is for $FG,6$CTRL$FG$ combo. You can find all CTRL combo in the
+$LK,"KernelA",A="FL:::/Kernel/KernelA.HH,3441"$ but you can't use defined word in $FG,2$.KBD$FG$ file. You $BK,1$MUST$BK,0$ use values only.
+
+Enjoy !
+
