@@ -8,7 +8,7 @@ class TaskProtocol(IntEnum):
 
 class TaskData:
     def __init__(self, _type: COMProtocol, _data: Optional[Any] = None):
-        self._type = _type
+        self._type = _type.value
         self._data = _data
 
     @property

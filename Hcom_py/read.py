@@ -26,11 +26,11 @@ class HcomReader:
         """
 
         create_task(self.wait_for_protocol())
-        await self.wait_for_thread_protocol()
+        await self.wait_for_task_protocol()
 
-    async def wait_for_thread_protocol(self):
+    async def wait_for_task_protocol(self):
         """
-        Wait for instruction from the main thread
+        Wait for instruction from the main task
         :return:
         """
 
@@ -82,7 +82,7 @@ class HcomReader:
         Send the ping protocol to the main thread
         :return:
         """
-        await self.send_data_queue.put(TaskData(COMProtocol.PING.value))
+        await self.send_data_queue.put(TaskData(COMProtocol.PING))
 
     async def SENDSTRING_read_protocol(self):
         """
@@ -97,7 +97,7 @@ class HcomReader:
             string += char.decode('latin-1')
             char: bytes = await self.read_stream(1)
 
-        await self.send_data_queue.put(TaskData(COMProtocol.SENDSTRING.value, _data=string))
+        await self.send_data_queue.put(TaskData(COMProtocol.SENDSTRING, _data=string))
 
     async def SENDLINE_read_protocol(self):
         """
@@ -114,7 +114,7 @@ class HcomReader:
 
         line += '\n'
 
-        await self.send_data_queue.put(TaskData(COMProtocol.SENDLINE.value, _data=line))
+        await self.send_data_queue.put(TaskData(COMProtocol.SENDLINE, _data=line))
 
     async def SENDCHAR_read_protocol(self):
         """
@@ -124,4 +124,4 @@ class HcomReader:
 
         char: bytes = await self.read_stream(1)
 
-        await self.send_data_queue.put(TaskData(COMProtocol.SENDCHAR.value, _data=char.decode('latin-1')))
+        await self.send_data_queue.put(TaskData(COMProtocol.SENDCHAR, _data=char.decode('latin-1')))

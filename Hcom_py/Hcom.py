@@ -1,4 +1,5 @@
-from TaskProtocol import TaskProtocol
+from COMenum import COMProtocol
+from TaskProtocol import TaskData
 from read import HcomReader
 from write import HcomWriter
 from user import HcomUser
@@ -32,6 +33,8 @@ class HCOM:
 
 		self.logger = getLogger(__name__)
 
+		self.is_pinging: bool = False
+
 		run(self.config())
 
 
@@ -47,10 +50,11 @@ class HCOM:
 
 		await self.config_tasks()
 
+		create_task(self.wait_for_hcom_reader_data())
+		#create_task(self.wait_for_hcom_writer_data())
+
 		while not self.task_user.done():
-			print("Wait for data from TempleOS...")
-			data = await self.hcom_reader_data_queue.get()
-			print(f"Data from TempleOS : {data.type} - {data.data}")
+			await sleep(1)
 
 		self.task_writer.cancel()
 		self.task_reader.cancel()
@@ -64,6 +68,40 @@ class HCOM:
 		self.hcom_user_data_queue.shutdown()
 
 		self.socket_writer.close() # close the connection socket
+
+
+	async def wait_for_hcom_reader_data(self):
+		"""
+		Wait for data in hcom_reader_data_queue queue
+		:return:
+		"""
+
+		while not self.task_user.done():
+			print("Wait for data from TempleOS...")
+			data = await self.hcom_reader_data_queue.get()
+			print(f"Data from TempleOS : {data.type} - {data.data}")
+
+			# if TempleOS request ping to the current system, and we don't ping before
+			if data.type == COMProtocol.PING.value:
+				if not self.is_pinging:
+					await self.hcom_writer_instruction_queue.put(TaskData(COMProtocol.PING))
+				else:
+					self.logger.info("    Ping successful whith TempleOS !")
+					self.is_pinging = False
+
+	async def wait_for_hcom_user_data(self):
+		"""
+		Wait for data in hcom_user_data_queue queue
+		:return:
+		"""
+		while not self.task_user.done():
+
+			data = await self.hcom_user_data_queue.get()
+
+			# if the user request a ping to TempleOS
+			if data.type == COMProtocol.PING.value:
+				self.is_pinging = True
+				self.hcom_writer_instruction_queue(TaskData(COMProtocol.PING))
 
 	async def wait_for_socket_connexion(self) -> bool:
 		"""
