@@ -39,7 +39,12 @@ class HcomWriter:
             match task_data.type:
                 case COMProtocol.PING.value:
                     await self.PING_write_protocol(task_data.type)
-
+                case COMProtocol.SENDCHAR.value:
+                    await self.SENDCHAR_write_protocol(task_data.data)
+                case COMProtocol.SENDLINE.value:
+                    await self.SENDLINE_write_protocol(task_data.data)
+                case COMProtocol.SENDSTRING.value:
+                    await self.SENDSTRING_write_protocol(task_data.data)
 
 
     async def PING_write_protocol(self, data: bytes):
@@ -51,5 +56,62 @@ class HcomWriter:
         self.stream_writer.write(data)
         await self.stream_writer.drain()
 
+
+    async def SENDCHAR_write_protocol(self, data: str):
+        """
+        Send a character to TempleOS
+        :param data:
+        :return:
+        """
+
+        self.stream_writer.write(COMProtocol.SENDCHAR.value)
+        await self.stream_writer.drain()
+
+        self.stream_writer.write(bytes(data, 'latin-1'))
+        await self.stream_writer.drain()
+
+
+    async def SENDLINE_write_protocol(self, data: str):
+        """
+        Send a character to TempleOS
+        :param data:
+        :return:
+        """
+
+        line: str = ''
+        char: str = data[0] if data else ''
+        i: int = 0
+        while i < len(data):
+
+            if char == '\n':
+
+                line += '\n'
+
+                self.stream_writer.write(COMProtocol.SENDLINE.value)
+                await self.stream_writer.drain()
+
+                self.stream_writer.write(bytes(line, 'latin-1'))
+                await self.stream_writer.drain()
+
+                line = ''
+
+            else:
+                line += char
+
+        if line:
+            self.logger.warning(f"SENDLINE write protocol : line not ended by \\n : {line}")
+
+    async def SENDSTRING_write_protocol(self, data: str):
+        """
+        Send a character to TempleOS
+        :param data:
+        :return:
+        """
+
+        self.stream_writer.write(COMProtocol.SENDSTRING.value)
+        await self.stream_writer.drain()
+
+        self.stream_writer.write(bytes(line, 'latin-1'))
+        await self.stream_writer.drain()
 
 
