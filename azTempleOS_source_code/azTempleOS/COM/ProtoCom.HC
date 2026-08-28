@@ -24,10 +24,40 @@ U0 SendCharCOM(U8 char, U16 base = COM1, I64 timeout = 5){
 }
 
 U0 SendLineCOM(U8* line, U16 base = COM1, I64 timeout = 5){
-    // Send a line (ended by \n) to base COM
+    // Send lines (ended by \n) to base COM
 
-    ComWrite(base, SENDLINE, timeout);
-    ComWriteLine(base, line, timeout);
+    I64 len_line = StrLen(line);
+
+
+    if (len_line == 0) return; // If the line is empty, send nothing
+
+
+    U8* buffer = MAlloc(len_line*sizeof(U8)); // \0 is not obligatory at the end of the string
+    U64 i_line = 0, i_buffer = 0;
+    U64 char = line[i_line];
+
+
+    while (i_line < len_line){
+
+        if (char == '\n'){
+
+            buffer[i_buffer] = char;
+
+            ComWrite(base, SENDLINE, timeout);
+            ComWriteLine(base, buffer, timeout);
+
+            i_buffer = 0;
+            i_line++;
+        }
+        else {
+
+            buffer[i_buffer] = line[i_line];
+            i_line++;
+            i_buffer++;
+        }
+        char = line[i_line];
+    }
+    Free(buffer);
 }
 
 U0 SendStringCOM(U8* str, U16 base = COM1, I64 timeout = 5){

@@ -156,8 +156,9 @@ Bool MyPutKey(I64 ch,I64 sc)
 	//Start of azerty mapping ALT-key in azerty keyboard
       
     }
-    U8 alt_caract = CustomScanCode2Char(sc, TRUE);
-    if (alt_caract != 0){
+    // Print the caracter setup in the custom ALT keymap
+    U64 alt_caract = CustomScanCode2Char(sc, TRUE);
+    if (alt_caracter != 0){
       "%c", alt_caract;
       return TRUE;
     }
