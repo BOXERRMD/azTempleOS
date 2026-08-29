@@ -1,4 +1,4 @@
-from asyncio import Queue, StreamWriter, create_task, Task
+from asyncio import Queue, StreamWriter, create_task, Task, sleep
 from logging import Logger
 from COMenum import COMProtocol
 from TaskProtocol import TaskProtocol, TaskData
@@ -24,9 +24,14 @@ class HcomWriter:
         :return:
         """
 
-        await self.wait_for_task_protocol()
+        t1 = create_task(self.wait_for_protocol())
 
-    async def wait_for_task_protocol(self):
+        while not self.shutdown:
+            await sleep(1)
+
+        t1.cancel()
+
+    async def wait_for_protocol(self):
         """
         Wait for main task instruction to send to TempleOS
         :return:
@@ -97,13 +102,14 @@ class HcomWriter:
 
             else:
                 line += char
+                char = data[i]
 
         if line:
             self.logger.warning(f"SENDLINE write protocol : line not ended by \\n : {line}")
 
     async def SENDSTRING_write_protocol(self, data: str):
         """
-        Send a character to TempleOS
+        Send a string to TempleOS
         :param data:
         :return:
         """
@@ -111,7 +117,11 @@ class HcomWriter:
         self.stream_writer.write(COMProtocol.SENDSTRING.value)
         await self.stream_writer.drain()
 
-        self.stream_writer.write(bytes(line, 'latin-1'))
+        self.stream_writer.write(bytes(data, 'latin-1'))
+        await self.stream_writer.drain()
+
+        # python doesn't contain \0 at end of strings
+        self.stream_writer.write(bytes('\0', 'latin-1'))
         await self.stream_writer.drain()
 
 

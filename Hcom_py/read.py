@@ -1,4 +1,4 @@
-from asyncio import Queue, StreamReader, create_task, wait_for
+from asyncio import Queue, StreamReader, create_task, wait_for, sleep
 from COMenum import COMProtocol
 from TaskProtocol import TaskProtocol, TaskData
 from logging import Logger
@@ -25,8 +25,14 @@ class HcomReader:
         :return:
         """
 
-        create_task(self.wait_for_protocol())
-        await self.wait_for_task_protocol()
+        t1 = create_task(self.wait_for_protocol())
+        t2 = create_task(self.wait_for_task_protocol())
+
+        while not self.shutdown:
+            await sleep(1)
+
+        t1.cancel()
+        t2.cancel()
 
     async def wait_for_task_protocol(self):
         """

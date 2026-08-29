@@ -4,6 +4,10 @@ from typing import Any, Optional
 
 class TaskProtocol(IntEnum):
     STOP = 1
+    RESEND_COMMANDS = 2
+    READ_READER_BUFFER = 3
+    CLEAN_READER_BUFFER = 4
+    POP_READER_BUFFER = 5
 
 
 class TaskData:
@@ -18,3 +22,6 @@ class TaskData:
     @property
     def data(self):
         return self._data
+
+    def __repr__(self):
+        return f"TaskData : {self.type} - {self.data}"

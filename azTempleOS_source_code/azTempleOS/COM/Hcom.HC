@@ -76,27 +76,26 @@ U0 ComReadLine(U16 base, U8* buffer, I64 len_buffer, I64 timeout = 5){
   */
 
   I64 i = 0;
-  U8 car = ComRead(base, timeout);
-  while (i < len_buffer-2 && car != '\n' && car != -1){
+  U64 char = ComRead(base, timeout);
+  while (i < len_buffer-2 && char != '\n' && char != -1){
 
-    if (car != '\r'){
-      buffer[i] = car;
+    if (char != '\r'){
+      buffer[i] = char;
       i++;
     }
-    car = ComRead(base, timeout);
-    if (car == -1){
-      PrintErr("COM %d : Read line timeout exceeded !\n");
-    }
+    char = ComRead(base, timeout);
   }
   buffer[i] = '\n';
   buffer[i+1] = '\0';
+  if (char == -1){
+      PrintErr("COM %d : Read line timeout exceeded !\n");
+  }
 }
 
 U0 ComWriteLine(U16 base, U8* value, I64 timeout = 5){
   /*
   write a line in the serial port "base"
   */
-  ComFlushOut(base);
 
   I64 i = 0;
   while (value[i] != '\n'){
@@ -114,24 +113,23 @@ U0 ComReadString(U16 base, U8* buffer, I64 len_buffer, I64 timeout = 5){
   */
 
   I64 i = 0;
-  U8 car = ComRead(base, timeout);
-  while (i < len_buffer-1 && car != '\0' && car != -1){
+  U64 char = ComRead(base, timeout);
+  while (i < len_buffer-1 && char != '\0' && char != -1){
 
-    buffer[i] = car;
+    buffer[i] = char;
     i++;
-    car = ComRead(base, timeout);
-    if (car == -1){
-      PrintErr("COM %d : Read string timeout exceeded !\n");
-    }
+    char = ComRead(base, timeout);
   }
   buffer[i] = '\0';
+  if (char == -1){
+      PrintErr("COM %d : Read string timeout exceeded !\n");
+  }
 }
 
 U0 ComWriteString(U16 base, U8* value, I64 timeout = 5){
   /*
   Write a string in the serial port "base"
-  */
-  ComFlushOut(base);  
+  */  
 
   I64 i = 0;
   while (value[i] != '\0'){

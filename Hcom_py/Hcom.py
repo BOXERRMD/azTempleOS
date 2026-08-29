@@ -1,5 +1,5 @@
 from COMenum import COMProtocol
-from TaskProtocol import TaskData
+from TaskProtocol import TaskData, TaskProtocol
 from read import HcomReader
 from write import HcomWriter
 from user import HcomUser
@@ -35,6 +35,8 @@ class HCOM:
 
 		self.is_pinging: bool = False
 
+		self.reader_buffer: list[str] = []
+
 		run(self.config())
 
 
@@ -50,22 +52,17 @@ class HCOM:
 
 		await self.config_tasks()
 
-		create_task(self.wait_for_hcom_reader_data())
-		#create_task(self.wait_for_hcom_writer_data())
+		t1 = create_task(self.wait_for_hcom_reader_data())
+		t2 = create_task(self.wait_for_hcom_user_data())
 
 		while not self.task_user.done():
 			await sleep(1)
 
+		t1.cancel()
+		t2.cancel()
+
 		self.task_writer.cancel()
 		self.task_reader.cancel()
-
-		self.hcom_reader_instruction_queue.shutdown()
-		self.hcom_writer_instruction_queue.shutdown()
-		self.hcom_user_instruction_queue.shutdown()
-
-		self.hcom_reader_data_queue.shutdown()
-		self.hcom_writer_data_queue.shutdown()
-		self.hcom_user_data_queue.shutdown()
 
 		self.socket_writer.close() # close the connection socket
 
@@ -77,9 +74,7 @@ class HCOM:
 		"""
 
 		while not self.task_user.done():
-			print("Wait for data from TempleOS...")
 			data = await self.hcom_reader_data_queue.get()
-			print(f"Data from TempleOS : {data.type} - {data.data}")
 
 			# if TempleOS request ping to the current system, and we don't ping before
 			if data.type == COMProtocol.PING.value:
@@ -88,6 +83,8 @@ class HCOM:
 				else:
 					self.logger.info("    Ping successful whith TempleOS !")
 					self.is_pinging = False
+			else:
+				self.reader_buffer.append(data.data)
 
 	async def wait_for_hcom_user_data(self):
 		"""
@@ -98,10 +95,20 @@ class HCOM:
 
 			data = await self.hcom_user_data_queue.get()
 
-			# if the user request a ping to TempleOS
-			if data.type == COMProtocol.PING.value:
-				self.is_pinging = True
-				self.hcom_writer_instruction_queue(TaskData(COMProtocol.PING))
+			if isinstance(data, TaskProtocol):
+				match data:
+					case TaskProtocol.STOP:
+						self.task_user.cancel()
+						continue
+					case TaskProtocol.READ_READER_BUFFER:
+						print(f"Buffer data : \n{'\n   '.join(self.reader_buffer)}")
+					case TaskProtocol.CLEAN_READER_BUFFER:
+						self.reader_buffer.clear()
+					case TaskProtocol.POP_READER_BUFFER:
+						print(f"Buffer data popped : {self.reader_buffer.pop(0, 'Noting to pop...')}")
+
+			await self.hcom_writer_instruction_queue.put(data)
+			await self.hcom_user_instruction_queue.put(TaskProtocol.RESEND_COMMANDS)
 
 	async def wait_for_socket_connexion(self) -> bool:
 		"""

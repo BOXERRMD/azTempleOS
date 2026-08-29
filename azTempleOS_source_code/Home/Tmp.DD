@@ -10,22 +10,84 @@ DATE_ TIME_ SIZE
 03/29 23:39 0000 $MA,"..",LM="Cd(\"C:/Home/..\");Dir;\n"$
 04/02 23:48 0000 $MA,"Psalmody",LM="Cd(\"C:/Home/Psalmody\");Dir;\n"$
 03/29 23:39 0000 $MA,"Span",LM="Cd(\"C:/Home/Span\");Dir;\n"$
-03/29 20:42 0821 $LK,"Tmp.DD.Z",A="FI:C:/Home/Tmp.DD.Z"$
+04/13 20:42 0377 $LK,"Tmp.DD.Z",A="FI:C:/Home/Tmp.DD.Z"$
 03/28 17:00 0437 $LK,"DoDistro.HC.Z",A="FI:C:/Home/DoDistro.HC.Z"$
-03/30 21:43 0793 $LK,"HomeKeyPlugIns.HC.Z",A="FI:C:/Home/HomeKeyPlugIns.HC.Z"$
+08/28 15:28 0794 $LK,"HomeKeyPlugIns.HC.Z",A="FI:C:/Home/HomeKeyPlugIns.HC.Z"$
 03/30 22:21 013E $LK,"MakeHome.HC.Z",A="FI:C:/Home/MakeHome.HC.Z"$
-04/13 19:29 02CF $LK,"Registry.HC.Z",A="FI:C:/Home/Registry.HC.Z"$
-C:/Home>$PT$Dir;
-$PT$$FG$$BG$$MA,"Directory",LM="PopUpCd;Dir;\n"$ of C:/Home
+08/29 22:52 01DB $LK,"Registry.HC.Z",A="FI:C:/Home/Registry.HC.Z"$
+C:/Home>$PT$Cd;#include "Once";
+$PT$$FG$$BG$$FG,5$$TX+CX,"Tip of the Day"$$FG$
+$WW,1$
+* Use $LK,"View",A="MN:View"$() in Pop-up macros to linger until the user presses $FG,2$<ESC>$FG$ or $FG,2$<SHIFT-ESC>$FG$.
+
+
+$WW,1$* You can adjust the mouse movement rate by setting global vars in your start-up file.  See $LK,"mouse scale",A="FF:~/HomeLocalize.HC,ms_hard.scale"$.
+
+* You can set your local time zone by setting the $FG,4$local_time_offset$FG$ global var in a start-up file.  It's units are $LK,"CDATE_FREQ",A="MN:CDATE_FREQ"$.  See $LK,"local time",A="FF:~/HomeLocalize.HC,local_time"$.
+
+* Get rid of this msg $LK,"here",A="FF:~/Once.HC,Customize.DD"$.
+
+
+Take Tour(y or n)? $PT$NO$FG$
+185.699990s
+C:/Home>$PT$Cd("C:/Home/..");Dir;
+$PT$$FG$$BG$$MA,"Directory",LM="PopUpCd;Dir;\n"$ of C:/
+DATE_ TIME_  SIZE
+03/29 23:37 00000 $MA,"0000Boot",LM="Cd(\"C:/0000Boot\");Dir;\n"$
+03/29 23:37 00000 $MA,"Adam",LM="Cd(\"C:/Adam\");Dir;\n"$
+03/29 23:38 00000 $MA,"Apps",LM="Cd(\"C:/Apps\");Dir;\n"$
+03/29 23:38 00000 $MA,"Compiler",LM="Cd(\"C:/Compiler\");Dir;\n"$
+03/29 23:38 00000 $MA,"Demo",LM="Cd(\"C:/Demo\");Dir;\n"$
+03/29 23:39 00000 $MA,"Doc",LM="Cd(\"C:/Doc\");Dir;\n"$
+03/29 23:39 00000 $MA,"Downloads",LM="Cd(\"C:/Downloads\");Dir;\n"$
+03/29 23:39 00000 $MA,"Home",LM="Cd(\"C:/Home\");Dir;\n"$
+03/29 23:39 00000 $MA,"Kernel",LM="Cd(\"C:/Kernel\");Dir;\n"$
+03/29 23:39 00000 $MA,"Misc",LM="Cd(\"C:/Misc\");Dir;\n"$
+03/29 23:39 00000 $MA,"Tmp",LM="Cd(\"C:/Tmp\");Dir;\n"$
+03/29 23:39 00000 $MA,"azTempleOS",LM="Cd(\"C:/azTempleOS\");Dir;\n"$
+03/29 23:39 2E740 $LK,"Kernel.BIN.C",A="FI:C:/Kernel.BIN.C"$
+12/12 22:36 03999 $LK,"PersonalMenu.DD.Z",A="FI:C:/PersonalMenu.DD.Z"$
+03/26 22:02 00048 $LK,"PersonalNotes.DD.Z",A="FI:C:/PersonalNotes.DD.Z"$
+08/28 15:27 007B6 $LK,"HomeKeyPlugIns.HC.Z",A="FI:C:/HomeKeyPlugIns.HC.Z"$
+01/04 23:01 00166 $LK,"HomeLocalize.HC.Z",A="FI:C:/HomeLocalize.HC.Z"$
+01/10 21:24 00231 $LK,"HomeSys.HC.Z",A="FI:C:/HomeSys.HC.Z"$
+09/27 11:24 001D2 $LK,"HomeWrappers.HC.Z",A="FI:C:/HomeWrappers.HC.Z"$
+03/30 21:43 015DD $LK,"Keyboard.HC.Z",A="FI:C:/Keyboard.HC.Z"$
+03/26 22:03 0013E $LK,"MakeHome.HC.Z",A="FI:C:/MakeHome.HC.Z"$
+03/26 22:04 002F8 $LK,"Once.HC.Z",A="FI:C:/Once.HC.Z"$
+03/30 21:58 003F2 $LK,"StartOS.HC.Z",A="FI:C:/StartOS.HC.Z"$
+0.001118s ans=0x00000017=23
+C:/>$PT$Cd("C:/azTempleOS");Dir;
+$PT$$FG$$BG$$MA,"Directory",LM="PopUpCd;Dir;\n"$ of C:/azTempleOS
+DATE_ TIME_    SIZE
+03/29 23:39 0000000 $MA,".",LM="Cd(\"C:/azTempleOS/.\");Dir;\n"$
+03/29 23:39 0000000 $MA,"..",LM="Cd(\"C:/azTempleOS/..\");Dir;\n"$
+04/13 22:23 0000000 $MA,"COM",LM="Cd(\"C:/azTempleOS/COM\");Dir;\n"$
+03/29 23:39 0000000 $MA,"Keyboard",LM="Cd(\"C:/azTempleOS/Keyboard\");Dir;\n"$
+04/01 21:50 0000000 $MA,"USB",LM="Cd(\"C:/azTempleOS/USB\");Dir;\n"$
+08/27 13:43 000008A $LK,"MakeazTempleOS.HC.Z",A="FI:C:/azTempleOS/MakeazTempleOS.HC.Z"$
+03/30 22:04 1E74800 $LK,"azTempleOS.ISO.C",A="FI:C:/azTempleOS/azTempleOS.ISO.C"$
+0.001164s ans=0x00000007=7
+C:/azTempleOS>$PT$Cd("C:/azTempleOS/COM");Dir;
+$PT$$FG$$BG$$MA,"Directory",LM="PopUpCd;Dir;\n"$ of C:/azTempleOS/COM
 DATE_ TIME_ SIZE
-03/29 23:39 0000 $MA,".",LM="Cd(\"C:/Home/.\");Dir;\n"$
-03/29 23:39 0000 $MA,"..",LM="Cd(\"C:/Home/..\");Dir;\n"$
-04/02 23:48 0000 $MA,"Psalmody",LM="Cd(\"C:/Home/Psalmody\");Dir;\n"$
-03/29 23:39 0000 $MA,"Span",LM="Cd(\"C:/Home/Span\");Dir;\n"$
-04/13 20:42 0266 $LK,"Tmp.DD.Z",A="FI:C:/Home/Tmp.DD.Z"$
-03/28 17:00 0437 $LK,"DoDistro.HC.Z",A="FI:C:/Home/DoDistro.HC.Z"$
-03/30 21:43 0793 $LK,"HomeKeyPlugIns.HC.Z",A="FI:C:/Home/HomeKeyPlugIns.HC.Z"$
-03/30 22:21 013E $LK,"MakeHome.HC.Z",A="FI:C:/Home/MakeHome.HC.Z"$
-04/13 20:36 02CF $LK,"Registry.HC.Z",A="FI:C:/Home/Registry.HC.Z"$
-0.001197s ans=0x00000009=9
-C:/Home>$PT$
+04/13 22:23 0000 $MA,".",LM="Cd(\"C:/azTempleOS/COM/.\");Dir;\n"$
+04/13 22:23 0000 $MA,"..",LM="Cd(\"C:/azTempleOS/COM/..\");Dir;\n"$
+08/27 13:44 004C $LK,"ComImport.HC.Z",A="FI:C:/azTempleOS/COM/ComImport.HC.Z"$
+08/29 21:22 06DF $LK,"Hcom.HC.Z",A="FI:C:/azTempleOS/COM/Hcom.HC.Z"$
+08/29 21:21 0325 $LK,"ProtoCom.HC.Z",A="FI:C:/azTempleOS/COM/ProtoCom.HC.Z"$
+0.001397s ans=0x00000005=5
+C:/azTempleOS/COM>$PT$#include "C:/azTempleOS/COM/Hcom.HC.Z";
+$PT$$FG$$BG$OptPass3 COCCompile PrsFun PrsGlblVarLst $FG,4$$BK,1$WARNING:$FG$$BK,0$ Using 64-bit reg var.
+ $LK,"FL:C:/azTempleOS/COM/Hcom.HC.Z,95"$ 'car' in 'ComReadLine'
+OptPass3 COCCompile PrsFun PrsGlblVarLst $FG,4$$BK,1$WARNING:$FG$$BK,0$ Using 64-bit reg var.
+ $LK,"FL:C:/azTempleOS/COM/Hcom.HC.Z,130"$ 'car' in 'ComReadString'
+$PT$$FG$$BG$$PT$$FG$$BG$0.000152s
+C:/azTempleOS/COM>$PT$#include "C:/azTempleOS/COM/ProtoCom.HC.Z";
+$PT$$FG$$BG$$PT$$FG$$BG$$PT$$FG$$BG$C:/azTempleOS/COM>$PT$I64 a =100;
+$PT$$FG$$BG$C:/azTempleOS/COM>$PT$U8* buff[a];
+$PT$$FG$$BG$C:/azTempleOS/COM>$PT$ComReadString(COM1, buff, a, 50);
+$PT$$FG$$BG$&ComRead &ComReadString . &ExeCmdLine $FG,4$$BK,1$WARNING:$FG$$BK,0$ COM 1016 : Read byte timeout exceeded !
+Except:StrPrint:$LK,"&StrPrintJoin+0x0797",A="AD:0x132DD"$:$LK,"&PrintErr+0x0023",A="AD:0x14851"$:$LK,"&ComReadString+0x006A",A="AD:0x3FD8F2A2"$:$LK,"3FD8D4C8",A="AD:0x3FD8D4C8"$:$LK,"&ExeCmdLine+0x0196",A="AD:0x1DAAE"$:$LK,"&UserTaskCont+0x005B",A="AD:0x1DC8B"$
+C:/azTempleOS/COM>$PT$"%s\n", buff;
+$PT$$FG$$BG$
