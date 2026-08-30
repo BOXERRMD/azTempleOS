@@ -1,7 +1,8 @@
-from asyncio import Queue, StreamReader, create_task, wait_for, sleep
+from asyncio import Queue, StreamReader, create_task, wait_for, sleep, TaskGroup
 from COMenum import COMProtocol
 from TaskProtocol import TaskProtocol, TaskData
 from logging import Logger
+from errors import UserShutdown
 
 class HcomReader:
 
@@ -16,8 +17,6 @@ class HcomReader:
         self.stream_reader: StreamReader = stream_reader
         self.logger: Logger = logger
 
-        self.shutdown: bool = False
-
 
     async def configure(self):
         """
@@ -25,14 +24,12 @@ class HcomReader:
         :return:
         """
 
-        t1 = create_task(self.wait_for_protocol())
-        t2 = create_task(self.wait_for_task_protocol())
-
-        while not self.shutdown:
-            await sleep(1)
-
-        t1.cancel()
-        t2.cancel()
+        try:
+            async with TaskGroup() as tg:
+                tg.create_task(self.wait_for_protocol())
+                tg.create_task(self.wait_for_task_protocol())
+        except* UserShutdown:
+            print("  HcomReader shutdown...")
 
     async def wait_for_task_protocol(self):
         """
@@ -40,12 +37,12 @@ class HcomReader:
         :return:
         """
 
-        while not self.shutdown:
+        while True:
             instruction: TaskProtocol = await self.instruction_queue.get()
 
             match instruction:
                 case TaskProtocol.STOP:
-                    self.shutdown = True
+                    raise UserShutdown()
 
     async def wait_for_protocol(self):
         """
@@ -53,7 +50,7 @@ class HcomReader:
         :return:
         """
 
-        while not self.shutdown:
+        while True:
 
 
             readed_protocol: bytes = await self.read_stream()

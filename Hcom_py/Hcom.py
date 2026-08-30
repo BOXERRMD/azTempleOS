@@ -4,8 +4,9 @@ from read import HcomReader
 from write import HcomWriter
 from user import HcomUser
 from typing import Optional, Union, Any
-from asyncio import run, Queue, open_connection, StreamReader, StreamWriter, sleep, Task, create_task
+from asyncio import run, Queue, open_connection, StreamReader, StreamWriter, sleep, create_task, TaskGroup
 from logging import getLogger
+from errors import UserShutdown
 
 class HCOM:
 
@@ -52,19 +53,18 @@ class HCOM:
 
 		await self.config_tasks()
 
-		t1 = create_task(self.wait_for_hcom_reader_data())
-		t2 = create_task(self.wait_for_hcom_user_data())
+		try:
+			async with TaskGroup() as tg:
+				tg.create_task(self.wait_for_hcom_reader_data())
+				tg.create_task(self.wait_for_hcom_user_data())
+		except* UserShutdown:
+			print("  HCOM shutdown...")
+		finally:
 
-		while not self.task_user.done():
-			await sleep(1)
+			await self.hcom_writer_instruction_queue.put(TaskProtocol.STOP)
+			await self.hcom_reader_instruction_queue.put(TaskProtocol.STOP)
 
-		t1.cancel()
-		t2.cancel()
-
-		self.task_writer.cancel()
-		self.task_reader.cancel()
-
-		self.socket_writer.close() # close the connection socket
+			self.socket_writer.close() # close the connection socket
 
 
 	async def wait_for_hcom_reader_data(self):
@@ -73,7 +73,7 @@ class HCOM:
 		:return:
 		"""
 
-		while not self.task_user.done():
+		while True:
 			data = await self.hcom_reader_data_queue.get()
 
 			# if TempleOS request ping to the current system, and we don't ping before
@@ -91,15 +91,17 @@ class HCOM:
 		Wait for data in hcom_user_data_queue queue
 		:return:
 		"""
-		while not self.task_user.done():
+
+		await self.hcom_user_instruction_queue.put(TaskProtocol.RESEND_COMMANDS)
+
+		while True:
 
 			data = await self.hcom_user_data_queue.get()
 
 			if isinstance(data, TaskProtocol):
 				match data:
 					case TaskProtocol.STOP:
-						self.task_user.cancel()
-						continue
+						raise UserShutdown()
 					case TaskProtocol.READ_READER_BUFFER:
 						print(f"Buffer data : \n{'\n   '.join(self.reader_buffer)}")
 					case TaskProtocol.CLEAN_READER_BUFFER:

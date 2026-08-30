@@ -1,7 +1,9 @@
-from asyncio import Queue, StreamWriter, create_task, Task, sleep
+from asyncio import Queue, StreamWriter, create_task, Task, sleep, TaskGroup
 from logging import Logger
 from COMenum import COMProtocol
-from TaskProtocol import TaskProtocol, TaskData
+from TaskProtocol import TaskData, TaskProtocol
+from typing import Union
+from errors import UserShutdown
 
 class HcomWriter:
 
@@ -16,40 +18,44 @@ class HcomWriter:
         self.stream_writer: StreamWriter = stream_writer
         self.logger: Logger = logger
 
-        self.shutdown: bool = False
-
     async def configure(self):
         """
         Configure the thread writer
         :return:
         """
 
-        t1 = create_task(self.wait_for_protocol())
+        try:
+            async with TaskGroup() as tg:
+                tg.create_task(self.wait_for_task_protocol())
+        except* UserShutdown:
+            print("  HcomWriter shutdown...")
 
-        while not self.shutdown:
-            await sleep(1)
 
-        t1.cancel()
-
-    async def wait_for_protocol(self):
+    async def wait_for_task_protocol(self):
         """
         Wait for main task instruction to send to TempleOS
         :return:
         """
 
-        while not self.shutdown:
+        while True:
 
-            task_data: TaskData = await self.instruction_queue.get()
+            task_data: Union[TaskProtocol, TaskData] = await self.instruction_queue.get()
 
-            match task_data.type:
-                case COMProtocol.PING.value:
-                    await self.PING_write_protocol(task_data.type)
-                case COMProtocol.SENDCHAR.value:
-                    await self.SENDCHAR_write_protocol(task_data.data)
-                case COMProtocol.SENDLINE.value:
-                    await self.SENDLINE_write_protocol(task_data.data)
-                case COMProtocol.SENDSTRING.value:
-                    await self.SENDSTRING_write_protocol(task_data.data)
+            if isinstance(task_data, TaskProtocol):
+                match task_data:
+                    case TaskProtocol.STOP:
+                        raise UserShutdown()
+
+            else:
+                match task_data.type:
+                    case COMProtocol.PING.value:
+                        await self.PING_write_protocol(task_data.type)
+                    case COMProtocol.SENDCHAR.value:
+                        await self.SENDCHAR_write_protocol(task_data.data)
+                    case COMProtocol.SENDLINE.value:
+                        await self.SENDLINE_write_protocol(task_data.data)
+                    case COMProtocol.SENDSTRING.value:
+                        await self.SENDSTRING_write_protocol(task_data.data)
 
 
     async def PING_write_protocol(self, data: bytes):

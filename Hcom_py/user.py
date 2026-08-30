@@ -1,8 +1,9 @@
-from asyncio import Queue, sleep, Queue, create_task, sleep
+from asyncio import Queue, sleep, Queue, create_task, sleep, TaskGroup
 from TaskProtocol import TaskProtocol, COMProtocol, TaskData
 from threading import Thread
 from queue import Empty, Queue as TQueue
 from typing import Union
+from errors import UserShutdown
 
 commands = """
         1 = send ping
@@ -31,7 +32,7 @@ class HcomUser:
         self.thread: Thread = Thread(target=self.thread_configuration) # used for request user input
         self.requests_user_task: Queue = Queue()
 
-        self.shutdown: bool = False
+        self.thread_shutdown: bool = False
 
     async def configure(self):
         """
@@ -40,14 +41,14 @@ class HcomUser:
         """
 
         self.thread.start()
-        t1 = create_task(self.wait_for_task_protocol())
-        t2 = create_task(self.wait_for_thread_data())
 
-        while not self.shutdown:
-            await sleep(1)
+        try:
+            async with TaskGroup() as tg:
+                tg.create_task(self.wait_for_task_protocol())
+                tg.create_task(self.wait_for_thread_data())
+        except UserShutdown:
+            print("  Shutdown HcomUser...")
 
-        t1.cancel()
-        t2.cancel()
 
     async def wait_for_thread_data(self):
         """
@@ -55,7 +56,7 @@ class HcomUser:
         :return:
         """
 
-        while not self.shutdown:
+        while True:
 
             try:
                 data: Union[TaskData, TaskProtocol] = self.tqueue_data.get_nowait()
@@ -75,13 +76,11 @@ class HcomUser:
         :return:
         """
 
-        while not self.shutdown:
+        while True:
 
             instruction: TaskProtocol = await self.instruction_queue.get()
 
             match instruction:
-                case TaskProtocol.STOP:
-                    self.shutdown = True
                 case TaskProtocol.RESEND_COMMANDS:
                     print(commands)
                     print('>>> ', end='', flush=True)
@@ -92,7 +91,7 @@ class HcomUser:
         :return:
         """
 
-        while not self.shutdown:
+        while not self.thread_shutdown:
             self.thread_wait_for_user_input()
 
 
@@ -104,7 +103,9 @@ class HcomUser:
 
         match input_user:
             case 's':
-                self.shutdown = True
+                self.tqueue_data.put(TaskProtocol.STOP)
+                print("  HcomUser shutdown...")
+                self.thread_shutdown = True
             case 'rb':
                 self.tqueue_data.put(TaskProtocol.READ_READER_BUFFER)
             case 'cb':
@@ -118,8 +119,7 @@ class HcomUser:
         :return:
         """
 
-        print(commands)
-        input_user: str = input('>>> ')
+        input_user: str = input()
 
         if not input_user.isdigit():
             self.thread_wait_for_task_protocol_user_input(input_user)
