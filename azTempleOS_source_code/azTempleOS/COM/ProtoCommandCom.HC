@@ -3,6 +3,20 @@
 #define SENDCHAR    0x02
 #define SENDLINE    0x03
 #define SENDSTRING  0x04
+#define SIZE        0x05
+
+
+U0 SendSizeCOM(I64 size_str, U16 base = COM1, I64 timeout = 5){
+    // Send data after the protocol
+
+    ComWrite(base, SIZE, timeout);
+
+    I64 i;
+    for (i = 0; i<8; i++){
+        //"u8[%d] = %d\n",i,size_str.u8[i];
+        ComWrite(base, size_str.u8[i], timeout);
+    }
+}
 
 Bool PingCOM(U16 base = COM1, I64 timeout = 5){
     // Send to base COM the PING byte and wait to recive the exact PING byte
@@ -44,6 +58,7 @@ U0 SendLineCOM(U8* line, U16 base = COM1, I64 timeout = 5){
             buffer[i_buffer] = char;
 
             ComWrite(base, SENDLINE, timeout);
+            SendSizeCOM((i_buffer(I64))+1, base, timeout);
             ComWriteLine(base, buffer, timeout);
 
             i_buffer = 0;
@@ -64,6 +79,7 @@ U0 SendStringCOM(U8* str, U16 base = COM1, I64 timeout = 5){
     // Send a string (ended by \0) to base COM
 
     ComWrite(base, SENDSTRING, timeout);
+    SendSizeCOM(StrLen(str), base, timeout);
     ComWriteString(base, str, timeout);
 }
 

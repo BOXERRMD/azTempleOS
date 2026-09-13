@@ -93,12 +93,15 @@ class HcomReader:
         :return:
         """
 
+        await self.SIZE_read_protocol()
+
         string = ''
         char: bytes = await self.read_stream(1)
-
+        print("caract :", char)
         while char != b'\0':
             string += char.decode('latin-1')
             char: bytes = await self.read_stream(1)
+            print("caract :", char)
 
         await self.send_data_queue.put(TaskData(COMProtocol.SENDSTRING, _data=string))
 
@@ -107,6 +110,8 @@ class HcomReader:
         Get a line (ended by \n) from TempleOS
         :return:
         """
+
+        await self.SIZE_read_protocol()
 
         line = ''
         char: bytes = await self.read_stream(1)
@@ -128,3 +133,17 @@ class HcomReader:
         char: bytes = await self.read_stream(1)
 
         await self.send_data_queue.put(TaskData(COMProtocol.SENDCHAR, _data=char.decode('latin-1')))
+
+    async def SIZE_read_protocol(self):
+        """
+        Get data size on 8 bytes
+        :return:
+        """
+
+        proto: bytes = await self.read_stream(1) # not used here but need to be consumed
+
+        size: bytearray = bytearray(8)
+        for i in range(8):
+            size[i] = int.from_bytes(await self.read_stream(1)) # read 8 bytes
+
+        return int.from_bytes(size, byteorder='little')

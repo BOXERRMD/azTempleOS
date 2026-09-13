@@ -5,3 +5,4 @@ class COMProtocol(Enum):
     SENDCHAR = 0x02.to_bytes()
     SENDLINE = 0x03.to_bytes()
     SENDSTRING = 0x04.to_bytes()
+    SIZE = 0x05.to_bytes()

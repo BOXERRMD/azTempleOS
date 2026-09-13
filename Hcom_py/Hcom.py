@@ -107,7 +107,7 @@ class HCOM:
 					case TaskProtocol.CLEAN_READER_BUFFER:
 						self.reader_buffer.clear()
 					case TaskProtocol.POP_READER_BUFFER:
-						print(f"Buffer data popped : {self.reader_buffer.pop(0, 'Noting to pop...')}")
+						print(f"Buffer data popped : {self.reader_buffer.pop(0) if self.reader_buffer else 'Noting to pop...'}")
 
 			await self.hcom_writer_instruction_queue.put(data)
 			await self.hcom_user_instruction_queue.put(TaskProtocol.RESEND_COMMANDS)
