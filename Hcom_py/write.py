@@ -98,10 +98,14 @@ class HcomWriter:
 
                 line += '\n'
 
+                bytes_data: bytes = bytes(line, 'latin-1')
+
                 self.stream_writer.write(COMProtocol.SENDLINE.value)
                 await self.stream_writer.drain()
 
-                self.stream_writer.write(bytes(line, 'latin-1'))
+                await self.SIZE_write_protocol(len(bytes_data))
+
+                self.stream_writer.write(bytes_data)
                 await self.stream_writer.drain()
 
                 line = ''
@@ -120,10 +124,14 @@ class HcomWriter:
         :return:
         """
 
+        bytes_data: bytes = bytes(data, 'latin-1')
+
         self.stream_writer.write(COMProtocol.SENDSTRING.value)
         await self.stream_writer.drain()
 
-        self.stream_writer.write(bytes(data, 'latin-1'))
+        await self.SIZE_write_protocol(len(bytes_data)+1)
+
+        self.stream_writer.write(bytes_data)
         await self.stream_writer.drain()
 
         # python doesn't contain \0 at end of strings
@@ -131,3 +139,22 @@ class HcomWriter:
         await self.stream_writer.drain()
 
 
+    async def SIZE_write_protocol(self, size_data: int):
+        """
+        Send data size after sent the protocol
+        :param size_data:
+        :return:
+        """
+
+        self.stream_writer.write(COMProtocol.SIZE.value)
+        await self.stream_writer.drain()
+
+        nbr_bytes: int = (size_data.bit_length() + 7) // 8
+
+        self.stream_writer.write(size_data.to_bytes(nbr_bytes, byteorder='little'))
+        await self.stream_writer.drain()
+
+        # if 8 bytes wasn't sent, complete it by sending empty bytes
+        if nbr_bytes != 8:
+            self.stream_writer.write(bytes(8-nbr_bytes))
+            await self.stream_writer.drain()

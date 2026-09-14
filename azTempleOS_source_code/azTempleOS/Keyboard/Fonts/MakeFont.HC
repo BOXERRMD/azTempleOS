@@ -1,6 +1,6 @@
 
 
-Bool makeFont(){
+public Bool MakeFont(){
   // make a custom font
   U64 default_font[256];
   MemCpy(default_font, text.font, FONT_SIZE);

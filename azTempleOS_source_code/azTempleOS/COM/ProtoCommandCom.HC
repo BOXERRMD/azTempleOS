@@ -1,10 +1,4 @@
 
-#define PING        0x01
-#define SENDCHAR    0x02
-#define SENDLINE    0x03
-#define SENDSTRING  0x04
-#define SIZE        0x05
-
 
 U0 SendSizeCOM(I64 size_str, U16 base = COM1, I64 timeout = 5){
     // Send data after the protocol

@@ -1,5 +1,8 @@
 
-Bool saveCustomFont(U8 *filename){
+public Bool saveCustomFont(U8 *filename){
+
+  // Save a custom font actualy loaded into text.font memory.
+  // Use $LK,"MakeFont",A="FF:::/azTempleOS/Keyboard/Fonts/MakeFont.HC.Z, MakeFont"$() to make a font and save it automaticaly
 
   U8 *path = StrPrint(NULL, "::/azTempleOS/Keyboard/Fonts/CustomFonts/%s", filename);
 
@@ -19,7 +22,9 @@ Bool saveCustomFont(U8 *filename){
   return TRUE;
 }
 
-Bool loadCustomFont(U8 *filename){
+public Bool loadCustomFont(U8 *filename){
+  // Load a custom font from a .KBD file.
+  // .KBD files are saved in ::/azTempleOS/Keyboard/Fonts/CustomFonts/
 
   U8 *path = StrPrint(NULL, "::/azTempleOS/Keyboard/Fonts/CustomFonts/%s", filename);
 

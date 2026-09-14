@@ -4,7 +4,8 @@ This file can be imported to change the keyboard mapping
 
 
 Bool changeKBD(U8 *filename, SingleKeyMap **keymaps, I64 keymaps_lenght){
-// make all keymap with the file given. 
+  // Make all keymap with the file given.
+  // This function must be call by $LK,"loadKBD",A="FA:::/azTempleOS/Keyboard/Driver/LoadKBD.HC.Z,fnc_loadKBD"$() function
 
   U8 *path = StrPrint(NULL, "::/azTempleOS/Keyboard/Layouts/%s", filename);
 
@@ -58,9 +59,11 @@ Bool changeKBD(U8 *filename, SingleKeyMap **keymaps, I64 keymaps_lenght){
   return TRUE;
 }
 
-
-U0 loadKBD(U8 *filename, U8 *font_filename=NULL){
-// entry function to change the kbd mapping
+$AN,"loadKBD function",A="fnc_loadKBD"$ // do not delete this anchor !
+public U0 loadKBD(U8 *filename, U8 *font_filename=NULL){
+  // entry function to change the kbd mapping
+  // take a .KBD filename (not absolute path)
+  // Optionaly take a font filename to load a new font with new keymaps
 
   I64 kmc = MAX_SCANCODE;
   SingleKeyMap **p = CAlloc(sizeof(SingleKeyMap*)*kmc);

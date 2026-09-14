@@ -1,11 +1,12 @@
 /*
 Contain functions to parse a single line of a kbd layout
+$BG,4$$TX+BK,"Must not be called manualy !"$$BD$
 */
 
 
 Bool parseLineLayout(U8 *buffer, SingleKeyMap *skm){
-// Parse a kbd layout line and return a pointer of SingleKeyMap class (in kbdData.HC.Z)
-// return 0 if an error was encountred
+  // Parse a kbd layout line and return a pointer of SingleKeyMap class (in kbdData.HC.Z)
+  // return 0 if an error was encountred
   // store temporary all keymap to put in skm
   U8 bufferSKM[5];
   MemSetU8(bufferSKM, 0, 5);

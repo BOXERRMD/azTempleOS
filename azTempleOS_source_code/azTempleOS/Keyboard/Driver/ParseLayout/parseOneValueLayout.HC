@@ -1,3 +1,6 @@
+// $BG,4$$TX+BK,"Must not be called manualy !"$$BG$
+
+
 Bool parseOneValue(U8* buffer, U8* bufferSKM, U64 ibufferSKM, U8* code, U64 icode){  
   /* parse a single key code*/
 

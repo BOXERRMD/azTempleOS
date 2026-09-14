@@ -10,6 +10,17 @@
 #define MCR 4
 #define LSR 5
 
+
+// HCOM protocol
+#define PING        0x01
+#define SENDCHAR    0x02
+#define SENDLINE    0x03
+#define SENDSTRING  0x04
+#define SIZE        0x05
+
+
+// Base functions to interact with COM serial ports
+
 U0 ComWrite(U16 base, U8 b, I64 timeout = 5){
 
   CDate goal = Now() + (CDATE_FREQ * timeout);

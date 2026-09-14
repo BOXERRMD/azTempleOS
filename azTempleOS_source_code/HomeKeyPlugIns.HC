@@ -88,6 +88,14 @@ Bool MyPutKey(I64 ch,I64 sc)
 		TimeIns;
 	    }
 	    return TRUE;
+          case SC_TAB:
+            if (!(sc&SCF_SHIFT)){
+              if (sc&SCF_KEY_DESC)
+                KeyDescSet("Complet the current path writing");
+              else
+                ShellPathCompleted();
+            }
+            return TRUE;
 	}
 	break;
       case 'a':
@@ -157,9 +165,9 @@ Bool MyPutKey(I64 ch,I64 sc)
       
     }
     // Print the caracter setup in the custom ALT keymap
-    U64 alt_caract = CustomScanCode2Char(sc, TRUE);
-    if (alt_caracter != 0){
-      "%c", alt_caract;
+    U64 alt_character = CustomScanCode2Char(sc, TRUE);
+    if (alt_character != 0){
+      "%c", alt_character;
       return TRUE;
     }
   } 

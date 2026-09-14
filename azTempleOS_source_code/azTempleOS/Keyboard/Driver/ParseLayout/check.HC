@@ -2,8 +2,8 @@
 Functions in the  file check if a string is hexa or decimal numbrer
 */
 
-Bool isHexa(U8 *buffer){
-// check if the containt buffer is a hexa number
+public Bool isHexa(U8 *buffer){
+  // check if the containt buffer is an hexadecimal number
   I64 len_buffer = StrLen(buffer);
 
   if (len_buffer < 3) return FALSE; // if is only 0x
@@ -27,8 +27,8 @@ Bool isHexa(U8 *buffer){
   return TRUE;
 }
 
-Bool isDecimal(U8 *buffer){
-// check if the contain buffer is a decimal number
+public Bool isDecimal(U8 *buffer){
+  // check if the contain buffer is a decimal number
 
   I64 len_buffer = StrLen(buffer);
 
@@ -44,7 +44,8 @@ Bool isDecimal(U8 *buffer){
   return TRUE;
 }
 
-Bool isU8(I64 value){
+public Bool isU8(I64 value){
+  // check if the value is 0<=value<=255
 
   if (value >= 0 && value <= 255) return TRUE;
 
@@ -52,7 +53,8 @@ Bool isU8(I64 value){
 }
 
 
-Bool isCorrectFormatNumber(U8* code){
+public Bool isCorrectFormatNumber(U8* code){
+  // check if is a correct format number (decimal or hexadecimal)
 
   if (isHexa(code)) return TRUE;
   if (isDecimal(code)) return TRUE;

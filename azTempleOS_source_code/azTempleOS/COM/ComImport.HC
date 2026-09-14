@@ -1,5 +1,5 @@
 
 #exe{Cd(__DIR__);};
-#import "Hcom"
-#import "ProtoCommandCom"
-#exe{Cd("../..");};
+#include "Hcom"
+#include "ProtoCommandCom"
+#exe{Cd("..");};
