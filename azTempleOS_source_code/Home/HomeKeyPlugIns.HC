@@ -88,14 +88,6 @@ Bool MyPutKey(I64 ch,I64 sc)
 		TimeIns;
 	    }
 	    return TRUE;
-          case SC_TAB:
-            if (!(sc&SCF_SHIFT)){
-              if (sc&SCF_KEY_DESC)
-                KeyDescSet("Complet the current path writing");
-              else;
-                //ShellPathCompleted();
-            }
-            return TRUE;
 	}
 	break;
       case 'a':
