@@ -4,6 +4,7 @@ It MUST be incude before including $LK,"HomeKeyPlugIns.HC.Z",A="FI:/Home/HomeKey
 */
 
 #exe{Cd(__DIR__);};
+#include "SearchPath"
 #include "ShellHook"
 
 #exe{Cd("~/");}; // return to /Home
