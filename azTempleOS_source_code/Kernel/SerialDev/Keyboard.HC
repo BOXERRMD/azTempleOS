@@ -121,8 +121,45 @@ U0 KbdTypeMatic(U8 delay)
   }
 }
 
+I64 CustomChar2ScanCode(I64 ch, I64 sc_flags=0){
+  // ASCII var to scan code from custom kbd
+
+  if (customKBD == NULL) return 0;
+
+  SingleKeyMap* skm;
+  I64 i;
+  for (i=0; i<MAX_SCANCODE; i++){
+
+    skm = customKBD[i];
+
+    if (skm != NULL){
+
+      if (sc_flags){
+
+        if (sc_flags&SCF_CTRL && ch == skm->control)
+          return i;
+
+        else if (sc_flags&SCF_ALT && ch == skm->alt)
+          return i;
+
+        else if ((sc_flags&SC_SHIFT || sc_flags&SC_CAPS || 'A'<=ch<='Z') &&
+                  ch == skm->shift)
+          return i;
+      }
+
+      else if (ch == skm->normal)
+        return i;
+    }
+  }
+  return 0;
+}
+
 I64 Char2ScanCode(I64 ch,I64 sc_flags=0)
 {//ASCII val to scan code (Slow).
+
+  if (isSetCustomKbd())
+    return CustomChar2ScanCode(ch, sc_flags);
+
   I64 i;
   U8 *table;
   if (sc_flags) {

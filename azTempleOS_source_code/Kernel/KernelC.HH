@@ -40,13 +40,14 @@ char_bmp_displayable[16],		char_bmp_safe_dollar[16],
 char_bmp_filename[16],			char_bmp_non_eol[16];
 
 #help_index "Char/Conversion"
-public extern Bool isSetCustomKbd();
-public extern U0 setCustomKbd(SingleKeyMap**);
-public extern U0 freeCustomKbd();
+public extern Bool isSetCustomKbd(); // Return TRUE if a custom kbd is set
+public extern U0 setCustomKbd(SingleKeyMap**); // Set a new custom kbd (use $LK,"LoadKBD",A="FI:::/azTempleOS/Keyboard/Driver/LoadKBD.HC.Z"$() to load a custom kbd) 
+public extern U0 freeCustomKbd(); // Free the current custom kbd (default TempleOS keymap is now used)
 public extern U8 *Char2KeyName(I64 ch,Bool include_ctrl=TRUE);
 public extern I64 Char2ScanCode(I64 ch,I64 sc_flags=0);
 public extern U8 ScanCode2Char(I64 sc);
-public extern U8 CustomScanCode2Char(I64 sc, Bool plugins); // use "/asTemeplOS/Keyboard" keymap
+public extern U8 CustomScanCode2Char(I64 sc, Bool plugins); // use "/azTemeplOS/Keyboard" keymap to return a custom char from a scancode
+public extern I64 CustomChar2ScanCode(I64 ch, I64 sc_flags);// use "/azTempleOS/Keyboard" keymap to return a scancode from a custom char
 public extern U8 *ScanCode2KeyName(I64 sc);
 public extern F64 Str2F64(U8 *src,U8 **_end_ptr=NULL);
 public extern I64 Str2I64(U8 *st,I64 radix=10,U8 **_end_ptr=NULL);

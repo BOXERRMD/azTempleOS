@@ -10,7 +10,7 @@ Bool ShellHookGetKey(I64 ch, I64 sc){
 
   I64 scancode = sc.u8[0];
 
-  if (sc&SCF_CTRL || sc&SCF_SHIFT) return FALSE; // completion work only with ALT
+  //if (sc&SCF_CTRL || sc&SCF_SHIFT) return FALSE; // completion work only with ALT
 
   if (scancode == SC_TAB && sc&SCF_ALT){
 
@@ -22,16 +22,6 @@ Bool ShellHookGetKey(I64 ch, I64 sc){
       return TRUE;
     }
   }
-  else if (scancode == SC_CURSOR_LEFT || scancode == SC_CURSOR_RIGHT){
-    ShellBackOrForward(scancode);
-  }
-  else if (scancode == SC_CURSOR_UP || scancode == SC_CURSOR_DOWN){
-    ShellUpOrDown(scancode);
-  }
-  else if (scancode == SC_ENTER){
-    ShellEnterKey;
-  }
-  //else ShellKeyBuffer(ch, sc&SCF_INS);
 
   return FALSE;
 }
