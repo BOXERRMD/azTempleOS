@@ -5,7 +5,8 @@ Hook function to get ALT+TAB
 
 CKeyDevEntry *shellKeyDevEntry = NULL;
 
-Bool ShellHookGetKey(I64 ch, I64 sc){
+
+Bool ShellHookGetKey(I64, I64 sc){
   // Hook entry for shell completion
 
   I64 scancode = sc.u8[0];
@@ -32,10 +33,5 @@ Bool ShellPutS(U8 *){
   return FALSE;
 }
 
-
-// Remove hook if existing (reset to remove bugs)
-if (shellKeyDevEntry != NULL)
-  KeyDevRem(shellKeyDevEntry);
-
-
-KeyDevAdd(&ShellHookGetKey, &ShellPutS, 0x1);
+if (shellKeyDevEntry == NULL)
+  shellKeyDevEntry = KeyDevAdd(&ShellHookGetKey, &ShellPutS, 0x1);

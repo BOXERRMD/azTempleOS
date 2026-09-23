@@ -7,6 +7,31 @@ class shell_line{
 };
 
 
+class shell_path{
+
+  U8* dir;
+  U8* filename;
+
+};
+
+U0 ShellLineFree(shell_line* s){
+ // Free a shell_line class
+
+ if (s == NULL) return;
+
+ Free(s->line);
+ Free(s);
+}
+
+U0 ShellPathFree(shell_path* sp){
+  // Free a shell_path class
+
+  if (sp == NULL) return;
+
+  Free(sp->dir);
+  Free(sp->filename);
+}
+
 shell_line* ShellLine(){
 
   // Get the last line of a shell.
@@ -46,7 +71,7 @@ shell_line* ShellLine(){
     cur_entry = cur_entry->last;
   }
 
-  if (cur_entry == NULL || cur_entry == doc) return;
+  if (cur_entry == NULL || cur_entry == doc) return NULL;
 
 
   doscanline:
@@ -91,26 +116,187 @@ I64 ShellFindPath(shell_line* s){
     else if (!(inquote)){
 
       if (line[i] == ' ' || Char2ScanCode(line[i], 0) == SC_TAB ||
-          line[i] == ';' || line[i] == '(' || line[i] == ',')
+          line[i] == ';' || line[i] == '(' || line[i] == ','){
         start_path = i+1;
         find = TRUE;
+      }
     }
-    i++;
+    i--;
   }
 
+  if (i==-1) return start_path;
   if (!(find)) return -1;
   return start_path;
 
 }
 
+
+shell_path* ShellSplitDirFilename(shell_line* s, I64 start_path){
+  // Return a shell_path class if he find a dir and a filename
+
+  shell_path* sp = MAlloc(sizeof(shell_path));
+
+  if (sp == NULL){
+    AdamErr("MAlloc error : shell_path class can't be malloced !\n");
+    return NULL;
+  }
+
+  I64 start_filename = s->cursor-1;
+
+  while (start_filename>=start_path){
+
+    if (s->line[start_filename] == '/' && start_filename<s->cursor){
+      start_filename = start_filename+1;
+      break;
+    }
+    start_filename--;
+  }
+
+  if (start_filename == -1) start_filename++;
+
+  U8* dir = NULL;
+  U8* filename = NULL;  
+
+  if (start_filename > start_path){
+    dir = MAlloc(sizeof(U8)*(start_filename - start_path)+1);
+    if (dir == NULL){
+      AdamErr("MAlloc error : path directory can't be malloced !\n");
+      Free(sp);
+      return NULL;
+    }
+    dir[0] = '\0';
+  }
+  if (start_filename < s->cursor){
+    filename = MAlloc(sizeof(U8)*(s->cursor - start_filename)+1);
+    if (filename == NULL){
+      AdamErr("MAlloc error : filename can't be malloced !\n");
+      Free(sp);
+      Free(dir);
+      return NULL;
+    }
+    filename[0] = '\0';
+  }
+
+  I64 i = start_path;
+
+  if (dir != NULL){
+
+    while (i<start_filename){
+      dir[i-start_path] = s->line[i];
+      i++;
+    }
+    dir[i-start_path] = '\0';
+  }
+
+  if (filename != NULL){
+
+    i = start_filename;
+    while (i<s->cursor){
+      filename[i-start_filename] = s->line[i];
+      i++;
+    }
+    filename[i-start_filename] = '\0';
+  }
+
+  sp->dir = dir;
+  sp->filename = filename;
+
+  return sp;
+}
+
+
+U8* ShellFileCompletion(shell_path* sp){
+  // Find a file to complete the filename given by the user
+
+  CDirEntry* files;
+  U8* full_path;
+
+  if (sp->dir != NULL && sp->filename != NULL)
+    full_path = StrPrint(NULL, "%s%s*", sp->dir, sp->filename);
+
+  else if (sp->dir != NULL)
+    full_path = sp->dir;
+
+  else
+    full_path = StrPrint(NULL, "./%s*", sp->filename);
+
+  files = FilesFind(full_path);
+
+  if (files == NULL) return NULL;
+
+  U8* completion = MAlloc(CDIR_FILENAME_LEN);
+  
+  if (completion == NULL){
+    AdamErr("MAlloc error : name completion can't be malloced !\n");
+    DirEntryDel(files);
+    return NULL;
+  }
+
+  completion[0] = '\0';
+  CatPrint(completion, "%s", files->name);
+
+  if (files->next != NULL){
+
+    I64 i;
+    files = files->next;
+    while (files != NULL){
+      i = 0;
+      while (files->name[i] == completion[i] && i < StrLen(completion)){
+        i++;
+      }
+      completion[i] = '\0';
+      files = files->next;
+    }
+  }
+  return completion;
+}
+
+
 U0 ShellCompletion(){
+  // Complete the path if possible.
+  // Trigger by ALT-TAB combo key
 
   shell_line* s = ShellLine;
 
   if (s == NULL) return;
 
-  //U8* path = ShellFindPath(s);
+  I64 start_path = ShellFindPath(s);
 
+  if (start_path == -1){
+    ShellLineFree(s);
+    return;
+  }
+
+  shell_path* sp = ShellSplitDirFilename(s, start_path);
+
+  if (sp == NULL){
+    ShellLineFree(s);
+    return;
+  }
+
+  //if (sp->dir != NULL) "DIR : %s\n", sp->dir;
+  //if (sp->filename != NULL) "FILE : %s\n", sp->filename;
+
+  U8* completion = ShellFileCompletion(sp);
+
+  if (completion != NULL){
+
+    I64 i = 0;
+    while (completion[i] != '\0'){
+
+      if (sp->filename != NULL){
+        if (StrLen(sp->filename) <= i || completion[i] != sp->filename[i])
+          PutKey(completion[i]);
+      }
+      else PutKey(completion[i]);
+      i++;
+    }
+    Free(completion);
+  }
+
+  ShellLineFree(s);
+  ShellPathFree(sp);
+  
 }
 
 
