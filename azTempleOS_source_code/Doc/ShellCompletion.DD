@@ -1,0 +1,36 @@
+$FG,9$A path completion was added to help the user to find a correct path.$FG$
+
+To trigger the shell completion, type $FG,2$ALT-TAB$FG$ combo juste after a path
+to find a file/directory and complete it.
+
+Shell completion work on the shell and in current edited file.
+
+To complete a partial path $FG,7$(not started by /)$FG$ in a file, note where the
+current edited path file and start at this position !
+
+$FG,9$Example : (current edited file path : $FG,4$/Home/myfile.HC.Z$FG,9$)
+
+	look my file in azTempleOS ! : $FG,12$../$FG,4$azTempleOS/Shell/ShellHook.HC.Z$FG$
+
+$FG,12$   ../$FG$ is used to return at the $FG,4$/$FG$ path from $FG,4$/Home$FG$ 
+       (where the current edited file is).
+
+
+
+
+If $FG,2$ALT-TAB$FG$ is pressed and nothing append, no file is adapted to complete
+the path.
+
+If more than one file start with the same research filename,
+he complete the filename with the begining of filenames who match together
+
+
+You can find the current key-hook $LK,"here",A="FI:::/azTempleOS/Shell/ShellHook.HC.Z"$.
+If you want disable it, you can comment the $FG,1$#include$FG$ to $LK,"MakeazTempleOS.HC.Z",A="FI:::/azTempleOS/MakeazTempleOS.HC.Z"$
+for $LK,"ShellImport.HC.Z",A="FI:::/azTempleOS/Shell/ShellImport.HC.Z"$.
+
+
+
+
+
+

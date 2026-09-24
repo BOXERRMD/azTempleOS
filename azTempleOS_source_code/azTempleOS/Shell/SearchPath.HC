@@ -30,6 +30,7 @@ U0 ShellPathFree(shell_path* sp){
 
   Free(sp->dir);
   Free(sp->filename);
+  Free(sp);
 }
 
 shell_line* ShellLine(){
@@ -222,9 +223,15 @@ U8* ShellFileCompletion(shell_path* sp){
   else
     full_path = StrPrint(NULL, "./%s*", sp->filename);
 
+  if (!(IsSilent)) Silent(ON);
+
   files = FilesFind(full_path);
 
+  if (IsSilent) Silent(OFF);
+
   if (files == NULL) return NULL;
+
+  Free(full_path);
 
   U8* completion = MAlloc(CDIR_FILENAME_LEN);
   

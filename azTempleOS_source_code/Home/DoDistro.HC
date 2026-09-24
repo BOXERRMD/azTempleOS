@@ -46,5 +46,6 @@ U0 MakeMyISO(U8 *_out_iso_filename)
 }
 
 MakeMyISO("::/azTempleOS/azTempleOS.ISO.C");
+DelTree("/Distro");
 
 // Study my account examples $LK,"Cfg Strs",A="FL:::/Demo/AcctExample/TOS/TOSCfg.HC,1"$, $LK,"Update Funs",A="FL:::/Demo/AcctExample/TOS/TOSDistro.HC,1"$.
