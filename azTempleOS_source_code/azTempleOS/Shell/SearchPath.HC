@@ -104,7 +104,7 @@ I64 ShellFindPath(shell_line* s){
   U8* line = s->line;
   I64 i = s->cursor;
   I64 _end = s->cursor, start_path = 0;
-  while (i>=0){
+  while (i>=0 && !(find)){
 
     if (line[i] == '"' && i == _end){
       inquote = TRUE;
@@ -115,8 +115,10 @@ I64 ShellFindPath(shell_line* s){
     }
     else if (!(inquote)){
 
-      if (line[i] == ' ' || Char2ScanCode(line[i], 0) == SC_TAB ||
-          line[i] == ';' || line[i] == '(' || line[i] == ','){
+      I64 sc;
+
+      if (line[i] == ' ' || line[i] == ';' || line[i] == '(' || 
+          line[i] == ',' || Char2ScanCode(line[i], 0) == SC_TAB){
         start_path = i+1;
         find = TRUE;
       }
