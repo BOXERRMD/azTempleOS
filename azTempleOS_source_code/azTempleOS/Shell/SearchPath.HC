@@ -213,12 +213,15 @@ U8* ShellFileCompletion(shell_path* sp){
 
   CDirEntry* files;
   U8* full_path;
+  Bool full_path_malloced = TRUE;
 
   if (sp->dir != NULL && sp->filename != NULL)
     full_path = StrPrint(NULL, "%s%s*", sp->dir, sp->filename);
 
-  else if (sp->dir != NULL)
+  else if (sp->dir != NULL){
     full_path = sp->dir;
+    full_path_malloced = FALSE;
+  }
 
   else
     full_path = StrPrint(NULL, "./%s*", sp->filename);
@@ -231,7 +234,8 @@ U8* ShellFileCompletion(shell_path* sp){
 
   if (files == NULL) return NULL;
 
-  Free(full_path);
+  if (full_path_malloced)
+    Free(full_path);
 
   U8* completion = MAlloc(CDIR_FILENAME_LEN);
   
