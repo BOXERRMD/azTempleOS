@@ -15,7 +15,9 @@ Bool changeKBD(U8 *filename, SingleKeyMap **keymaps, I64 keymaps_lenght){
   }
 
   U8 *file = FileRead(path);
-  U64 len_file = StrLen(file); 
+  U64 len_file = StrLen(file);
+
+  Free(path); 
 
   U8 line[100]; // store each line to be parsed
   line[0] = '\0';
@@ -27,6 +29,12 @@ Bool changeKBD(U8 *filename, SingleKeyMap **keymaps, I64 keymaps_lenght){
 
     SingleKeyMap *skm = MAlloc(sizeof(SingleKeyMap));
 
+    if (skm == NULL){
+      PrintErr("MAlloc error : SingleKeyMap class can't be malloced !\n");
+      Free(file);
+      return FALSE;
+    }
+
     while (i<len_file && file[i] != '\n'){
       line[iline] = file[i];
       iline++;
@@ -35,11 +43,16 @@ Bool changeKBD(U8 *filename, SingleKeyMap **keymaps, I64 keymaps_lenght){
     }
     if (StrLen(line) != 0 && line[0] != '/'){ // line[0] != '/' skip comment who start at the begining of the line.
       Bool result = parseLineLayout(line, skm);
-      if (!(result)) return FALSE;
+      if (!(result)){
+        Free(skm);
+        Free(file);
+        return FALSE;
+      }
       if (skm->scancode != 0){
         if (keymaps_count > keymaps_lenght){
           PrintErr("Too more line to parse in %s file !\nEnd parsing to the line : %s\n", filename, line);
           Free(skm);
+          Free(file);
           return FALSE;
         }
         else{
@@ -56,8 +69,26 @@ Bool changeKBD(U8 *filename, SingleKeyMap **keymaps, I64 keymaps_lenght){
     iline = 0;
     line[iline] = '\0';
   }
+
+  Free(file);
   return TRUE;
+
 }
+
+
+U0 FreeTmpKBD(SingleKeyMap** tmp){
+  // Free the temporary keymaps if an error occured.
+
+  if (tmp == NULL) return;
+
+  I64 i = 0;
+  while (i < MAX_SCANCODE){
+    if (tmp[i] != NULL) Free(tmp[i]);
+    i++;
+  }
+  Free(tmp);
+}
+
 
 $AN,"loadKBD function",A="fnc_loadKBD"$ // do not delete this anchor !
 public U0 loadKBD(U8 *filename, U8 *font_filename=NULL){
@@ -71,11 +102,13 @@ public U0 loadKBD(U8 *filename, U8 *font_filename=NULL){
   Bool result = changeKBD(filename, p, kmc);
 
   if (result){
-    freeCustomKbd();
+    freeCustomKbd;
     setCustomKbd(p);
-    "$MA+BK,"RESET KEYBOARD",LM="freeCustomKbd();\n"$\n";
+    "$MA+BK,"RESET KEYBOARD",LM="freeCustomKbd();\n"$ (use $FG,4$freeCustomKbd()$FG$ to free keymaps)\n";
   }
-  else Free(p);
+  else{
+    FreeTmpKBD(p);
+  }
 
   if (font_filename){
     loadCustomFont(font_filename);

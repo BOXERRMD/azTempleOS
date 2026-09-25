@@ -74,7 +74,6 @@ Bool parseLineLayout(U8 *buffer, SingleKeyMap *skm){
   }
 
   if (break_loop) {
-    Free(skm);
     return FALSE;
   }
 

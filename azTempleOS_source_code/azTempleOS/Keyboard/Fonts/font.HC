@@ -9,15 +9,20 @@ public Bool saveCustomFont(U8 *filename){
   
   if (StrLen(path) > STR_LEN){
     PrintErr("Path : \"%s\" too long !\n", path);
+    Free(path);
     return FALSE;
   }
 
   if (FileFind(path)){
     PrintWarn("File font : \"%s\" already existing !\nDo you want rewrite-it ?\n", filename);
-    if (!(YorN)) return FALSE;
+    if (!(YorN)){
+      Free(path);
+      return FALSE;
+    }
   }
   "PATH : %s\n", path;
   FileWrite(path, text.font, FONT_SIZE);
+  Free(path);
 
   return TRUE;
 }
@@ -30,11 +35,13 @@ public Bool loadCustomFont(U8 *filename){
 
   if (StrLen(path) > STR_LEN){
     PrintErr("Path : \"%s\" too long !\n", path);
+    Free(path);
     return FALSE;
   }
 
   if (!(FileFind(path))){
     PrintErr("File font : \"%s\" not found !\n", filename);
+    Free(path);
     return FALSE;
   }
 
@@ -50,6 +57,7 @@ public Bool loadCustomFont(U8 *filename){
   }
   else PrintErr("FILEREAD ERROR !\n");
 
+  Free(path);
 }
 
 
