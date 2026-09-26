@@ -129,7 +129,7 @@ class HcomWriter:
         self.stream_writer.write(COMProtocol.SENDSTRING.value)
         await self.stream_writer.drain()
 
-        await self.SIZE_write_protocol(len(bytes_data)+1)
+        await self.SIZE_write_protocol(len(bytes_data)+1) # +1 for \0
 
         self.stream_writer.write(bytes_data)
         await self.stream_writer.drain()
@@ -151,7 +151,7 @@ class HcomWriter:
 
         nbr_bytes: int = (size_data.bit_length() + 7) // 8
 
-        self.stream_writer.write(size_data.to_bytes(nbr_bytes, byteorder='little'))
+        self.stream_writer.write(size_data.to_bytes(nbr_bytes, byteorder='big'))
         await self.stream_writer.drain()
 
         # if 8 bytes wasn't sent, complete it by sending empty bytes
