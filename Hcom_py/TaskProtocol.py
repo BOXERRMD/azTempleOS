@@ -8,6 +8,7 @@ class TaskProtocol(IntEnum):
     READ_READER_BUFFER = 3
     CLEAN_READER_BUFFER = 4
     POP_READER_BUFFER = 5
+    USER_RECEIVE_DATA = 6
 
 
 class TaskData:

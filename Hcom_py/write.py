@@ -109,9 +109,11 @@ class HcomWriter:
                 await self.stream_writer.drain()
 
                 line = ''
+                i+=1
 
             else:
                 line += char
+                i += 1
                 char = data[i]
 
         if line:
