@@ -90,9 +90,10 @@ class HcomWriter:
         """
 
         line: str = ''
-        char: str = data[0] if data else ''
         i: int = 0
         while i < len(data):
+
+            char: str = data[i]
 
             if char == '\n':
 
@@ -114,7 +115,6 @@ class HcomWriter:
             else:
                 line += char
                 i += 1
-                char = data[i]
 
         if line:
             self.logger.warning(f"SENDLINE write protocol : line not ended by \\n : {line}")
