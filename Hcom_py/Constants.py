@@ -1,0 +1,1 @@
+PACKET_SIZE: int = 1024
