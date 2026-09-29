@@ -116,8 +116,6 @@ I64 ShellFindPath(shell_line* s){
     }
     else if (!(inquote)){
 
-      I64 sc;
-
       if (line[i] == ' ' || line[i] == ';' || line[i] == '(' || 
           line[i] == ',' || Char2ScanCode(line[i], 0) == SC_TAB){
         start_path = i+1;
